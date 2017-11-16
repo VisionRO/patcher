@@ -27,7 +27,7 @@ namespace VisionRO.Patcher.Services
 
         public bool IsValidRagnarokClient()
         {
-            return requiredKroFiles.All(file => File.Exists(Path.Combine(_localPath, "data.grf")));
+            return requiredKroFiles.All(file => File.Exists(Path.Combine(_localPath, file)));
         }
 
         public bool IsInstalled()
