@@ -143,17 +143,15 @@ namespace VisionRO.Patcher.Services
                     repo.Reset(ResetMode.Hard, "master");
                 }
                 _updateProgressDelegate("Repair completed!", 100);
+                _state = StateEnum.Idle;
+                Update();
             }
             catch (Exception ex)
             {
                 _updateProgressDelegate("An error occured...", 0);
                 File.WriteAllText("vision-patcher.log", JsonConvert.SerializeObject(ex));
-            }
-            finally
-            {
                 _state = StateEnum.Idle;
             }
-            Update();
         }
 
         private bool OnTransferProgress(TransferProgress progress)
