@@ -8,18 +8,14 @@ using VisionRO.Patcher.Services;
 
 namespace VisionRO.Patcher
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private UpdateService _updateService { get; set; }
-        private Uri _clientUri { get; set; }
+        private string _clientUri { get; set; }
 
         public MainWindow()
         {
-            //_clientUri = new Uri(Assembly.GetExecutingAssembly().Location);
-            _clientUri = new Uri("D:\\tmp");
+            _clientUri = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             InitializeComponent();
         }
 
@@ -55,7 +51,7 @@ namespace VisionRO.Patcher
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(Path.Combine(_clientUri.AbsolutePath, "vision-ro.exe"));
+            Process.Start(Path.Combine(_clientUri, "vision-ro.exe"));
             Close();
         }
 

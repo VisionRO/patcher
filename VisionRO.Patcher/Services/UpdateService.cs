@@ -11,13 +11,13 @@ namespace VisionRO.Patcher.Services
     {
         private enum StateEnum { Idle, Installing, Updating, Reparing };
         private readonly string[] requiredKroFiles = new[] { "data.grf", "rdata.grf" };
-        private readonly Uri _localPath;
+        private readonly string _localPath;
         private readonly string _remoteUrl;
         private readonly Action<string, int> _updateProgressDelegate;
         private readonly Action _clientReadyDelegate;
         private StateEnum _state = StateEnum.Idle;
 
-        public UpdateService(Uri localPath, string remoteUrl, Action<string, int> updateProgressDelegate, Action clientReadyDelegate)
+        public UpdateService(string localPath, string remoteUrl, Action<string, int> updateProgressDelegate, Action clientReadyDelegate)
         {
             _localPath = localPath;
             _remoteUrl = remoteUrl;
@@ -27,14 +27,14 @@ namespace VisionRO.Patcher.Services
 
         public bool IsValidRagnarokClient()
         {
-            return requiredKroFiles.All(file => File.Exists(Path.Combine(_localPath.AbsolutePath, "data.grf")));
+            return requiredKroFiles.All(file => File.Exists(Path.Combine(_localPath, "data.grf")));
         }
 
         public bool IsInstalled()
         {
             try
             {
-                new Repository(_localPath.AbsolutePath).Dispose();
+                new Repository(_localPath).Dispose();
                 return true;
             }
             catch (Exception)
@@ -57,7 +57,7 @@ namespace VisionRO.Patcher.Services
             _state = StateEnum.Installing;
             try
             {
-                Repository.Clone(_remoteUrl, _localPath.AbsolutePath, new CloneOptions
+                Repository.Clone(_remoteUrl, _localPath, new CloneOptions
                 {
                     Checkout = true,
                     BranchName = "master",
@@ -93,7 +93,7 @@ namespace VisionRO.Patcher.Services
             _state = StateEnum.Updating;
             try
             {
-                using (var repo = new Repository(_localPath.AbsolutePath))
+                using (var repo = new Repository(_localPath))
                 {
                     Commands.Pull(repo, new Signature("any", "any", DateTime.Now), new PullOptions
                     {
@@ -138,7 +138,7 @@ namespace VisionRO.Patcher.Services
             _state = StateEnum.Reparing;
             try
             {
-                using (var repo = new Repository(_localPath.AbsolutePath))
+                using (var repo = new Repository(_localPath))
                 {
                     repo.Reset(ResetMode.Hard, "master");
                 }
