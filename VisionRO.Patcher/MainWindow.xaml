@@ -1,0 +1,157 @@
+﻿<Window x:Class="VisionRO.Patcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisionRO.Patcher"
+        mc:Ignorable="d"
+        Title="Vision RO"
+        Height="450"
+        Width="700"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        WindowState="Normal"
+        WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Assets\bg.png"></ImageBrush>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="277*" />
+            <ColumnDefinition Width="405*" />
+            <ColumnDefinition Width="17*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="157*"></RowDefinition>
+                <RowDefinition Height="293*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" >
+                <Button
+                    Width="148px"
+                    Height="51px"
+                    Margin="5"
+                    Padding="0"
+                    Name="btnPlay"
+                    Click="btnPlay_Click"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Visibility="Hidden">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Image Name="button" Source="Assets\start.png"></Image>
+                                <Image Name="button_hover" Source="Assets\start_hover.png" Visibility="Collapsed"></Image>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="button_hover" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="button" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button
+                    Width="97px"
+                    Height="33px" 
+                    Margin="5"
+                    Padding="0"
+                    Name="btnRepair" 
+                    Click="btnRepair_Click" 
+                    Background="Transparent" 
+                    BorderThickness="0"
+                    Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Image Name="button" Source="Assets\button.png"></Image>
+                                <Image Name="button_hover" Source="Assets\button_hover.png" Visibility="Collapsed"></Image>
+                                <Label
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Foreground="LightGray"
+                                    FontSize="15"
+                                    Padding="0 0 0 3"
+                                    FontWeight="Bold">
+                                    Repair
+                                </Label>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="button_hover" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="button" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <Button
+                    Width="97px"
+                    Height="33px" 
+                    Margin="5"
+                    Padding="0"
+                    Name="btnExit" 
+                    Click="btnExit_Click" 
+                    Background="Transparent" 
+                    BorderThickness="0"
+                    Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Image Name="button" Source="Assets\button.png"></Image>
+                                <Image Name="button_hover" Source="Assets\button_hover.png" Visibility="Collapsed"></Image>
+                                <Label
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Foreground="LightGray"
+                                    FontSize="15"
+                                    Padding="0 0 0 3"
+                                    FontWeight="Bold">
+                                    Exit
+                                </Label>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="button_hover" Property="Visibility" Value="Visible" />
+                                    <Setter TargetName="button" Property="Visibility" Value="Collapsed" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="209*"></RowDefinition>
+                <RowDefinition Height="164*"></RowDefinition>
+                <RowDefinition Height="18*"></RowDefinition>
+                <RowDefinition Height="23*"></RowDefinition>
+                <RowDefinition Height="36*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ProgressBar
+                Grid.Row="3"
+                Name="progressBar"
+                Background="Transparent"
+                BorderThickness="0"
+                Foreground="#440000"></ProgressBar>
+            <Label
+                Grid.Row="3"
+                Name="progressLabel"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                VerticalContentAlignment="Center" 
+                HorizontalContentAlignment="Center" 
+                Padding="0 0 0 3"
+                Foreground="White">
+            </Label>
+        </Grid>
+    </Grid>
+</Window>
