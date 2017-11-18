@@ -90,13 +90,15 @@ namespace VisionRO.Patcher.Services
                     {
                         FetchOptions = new FetchOptions
                         {
+                            TagFetchMode = TagFetchMode.None,
                             OnProgress = OnProgress,
-                            OnTransferProgress = OnTransferProgress,
+                            OnTransferProgress = OnTransferProgress
                         },
                         MergeOptions = new MergeOptions
                         {
                             CommitOnSuccess = false,
                             FileConflictStrategy = CheckoutFileConflictStrategy.Theirs,
+                            MergeFileFavor = MergeFileFavor.Theirs,
                             OnCheckoutProgress = OnCheckoutProgress
                         }
                     });
