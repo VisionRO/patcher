@@ -10,7 +10,7 @@ namespace VisionRO.Patcher
 {
     public partial class MainWindow : Window
     {
-        private const string VersionNumber = "1.0.1";
+        private const string VersionNumber = "1.0.2";
         private UpdateService _updateService { get; set; }
         private string _clientUri { get; set; }
 

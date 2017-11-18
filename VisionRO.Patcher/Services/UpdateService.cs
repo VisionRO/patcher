@@ -194,7 +194,7 @@ namespace VisionRO.Patcher.Services
             {
                 using (var repo = new Repository(_localPath))
                 {
-                    repo.Reset(ResetMode.Hard, repo.Head.Tip, new CheckoutOptions
+                    repo.Reset(ResetMode.Hard, repo.Branches["origin/master"].Tip, new CheckoutOptions
                     {
                         OnCheckoutProgress = OnCheckoutProgress,
                         CheckoutModifiers = CheckoutModifiers.Force
