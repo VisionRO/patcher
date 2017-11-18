@@ -152,6 +152,14 @@
                 Padding="0 0 0 3"
                 Foreground="White">
             </Label>
+            <Label
+                Grid.Row="4"
+                Name="lbVersionNumber"
+                Foreground="Gray"
+                FontSize="10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom">
+            </Label>
         </Grid>
     </Grid>
 </Window>

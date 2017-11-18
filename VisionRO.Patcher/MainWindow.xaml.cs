@@ -10,6 +10,7 @@ namespace VisionRO.Patcher
 {
     public partial class MainWindow : Window
     {
+        private const string VersionNumber = "1.0.1";
         private UpdateService _updateService { get; set; }
         private string _clientUri { get; set; }
 
@@ -22,6 +23,7 @@ namespace VisionRO.Patcher
         protected override void OnInitialized(EventArgs e)
         {
             base.OnInitialized(e);
+            lbVersionNumber.Content = VersionNumber;
             _updateService = new UpdateService(_clientUri, "https://github.com/VisionRO/client.git", UpdateProgressDelegate, ClientReadyDelegate);
             InitAsync();
         }
