@@ -41,14 +41,15 @@ namespace VisionRO.Patcher.Services
         {
             return Task.Run(() =>
             {
+                if (_state != StateEnum.Idle) return;
+                _state = StateEnum.Installing;
                 Install();
+                _state = StateEnum.Idle;
             });
         }
 
         private void Install()
         {
-            if (_state != StateEnum.Idle) return;
-            _state = StateEnum.Installing;
             try
             {
                 Repository.Clone(_remoteUrl, _localPath, new CloneOptions
@@ -64,12 +65,7 @@ namespace VisionRO.Patcher.Services
             }
             catch (Exception ex)
             {
-                _updateProgressDelegate("An error occured...", 0);
-                File.WriteAllText("vision-patcher.log", JsonConvert.SerializeObject(ex));
-            }
-            finally
-            {
-                _state = StateEnum.Idle;
+                HandleException(ex);
             }
         }
 
@@ -77,14 +73,15 @@ namespace VisionRO.Patcher.Services
         {
             return Task.Run(() =>
             {
+                if (_state != StateEnum.Idle) return;
+                _state = StateEnum.Updating;
                 Update();
+                _state = StateEnum.Idle;
             });
         }
 
         private void Update()
         {
-            if (_state != StateEnum.Idle) return;
-            _state = StateEnum.Updating;
             try
             {
                 using (var repo = new Repository(_localPath))
@@ -109,10 +106,8 @@ namespace VisionRO.Patcher.Services
             }
             catch (Exception ex)
             {
-                _updateProgressDelegate("An error occured...", 0);
-                File.WriteAllText("vision-patcher.log", JsonConvert.SerializeObject(ex));
+                HandleException(ex);
             }
-            finally
             {
                 _state = StateEnum.Idle;
             }
@@ -122,29 +117,30 @@ namespace VisionRO.Patcher.Services
         {
             return Task.Run(() =>
             {
+                if (_state != StateEnum.Idle) return;
+                _state = StateEnum.Reparing;
                 Repair();
+                _state = StateEnum.Idle;
             });
         }
 
         private void Repair()
         {
-            if (_state != StateEnum.Idle) return;
-            _state = StateEnum.Reparing;
             try
             {
                 using (var repo = new Repository(_localPath))
                 {
-                    repo.Reset(ResetMode.Hard, "master");
+                    repo.Reset(ResetMode.Hard, repo.Head.Tip, new CheckoutOptions
+                    {
+                        OnCheckoutProgress = OnCheckoutProgress,
+                        CheckoutModifiers = CheckoutModifiers.Force
+                    });
                 }
                 _updateProgressDelegate("Repair completed!", 100);
-                _state = StateEnum.Idle;
-                Update();
             }
             catch (Exception ex)
             {
-                _updateProgressDelegate("An error occured...", 0);
-                File.WriteAllText("vision-patcher.log", JsonConvert.SerializeObject(ex));
-                _state = StateEnum.Idle;
+                HandleException(ex);
             }
         }
 
@@ -152,7 +148,7 @@ namespace VisionRO.Patcher.Services
         {
             var mbReceived = Math.Round((double)progress.ReceivedBytes / 1024 / 1024, 1);
             var pctProgress = (int)((double)progress.ReceivedObjects / progress.TotalObjects * 100);
-            _updateProgressDelegate($"Downloading... {mbReceived}", pctProgress);
+            _updateProgressDelegate($"Downloading... {mbReceived} MB", pctProgress);
             return true;
         }
 
@@ -165,6 +161,12 @@ namespace VisionRO.Patcher.Services
         private void OnCheckoutProgress(string path, int completedSteps, int totalSteps)
         {
             _updateProgressDelegate($"Checking out {path}", (int)((double)completedSteps / totalSteps * 100));
+        }
+
+        private void HandleException(Exception ex)
+        {
+            _updateProgressDelegate("An error occured...", 0);
+            File.WriteAllText("vision-ro-patcher.log", JsonConvert.SerializeObject(ex));
         }
     }
 }

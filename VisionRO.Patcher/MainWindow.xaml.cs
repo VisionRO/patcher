@@ -49,6 +49,7 @@ namespace VisionRO.Patcher
         private async void btnRepair_Click(object sender, RoutedEventArgs e)
         {
             await _updateService.RepairAsync();
+            await _updateService.UpdateAsync();
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
