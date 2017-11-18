@@ -1,15 +1,17 @@
 ﻿using LibGit2Sharp;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace VisionRO.Patcher.Services
 {
     public class UpdateService
     {
-        private enum StateEnum { Idle, Installing, Updating, Reparing };
+        private enum StateEnum { Idle, Installing, Updating, Reparing, UpdatingPatcher };
         private readonly string _localPath;
         private readonly string _remoteUrl;
         private readonly Action<string, int> _updateProgressDelegate;
@@ -110,8 +112,67 @@ namespace VisionRO.Patcher.Services
             {
                 HandleException(ex);
             }
+        }
+
+        public Task UpdatePatcherAsync()
+        {
+            return Task.Run(() =>
             {
+                if (_state != StateEnum.Idle) return;
+                _state = StateEnum.UpdatingPatcher;
+                UpdatePatcher();
                 _state = StateEnum.Idle;
+            });
+        }
+
+        private void UpdatePatcher()
+        {
+            var latestPath = Path.Combine(_localPath, "vpatcher", "VisionRO.Patcher.exe");
+            var currentPath = Path.Combine(_localPath, "VisionRO.Patcher.exe");
+
+            if (!File.Exists(latestPath)) return;
+
+            var latestMd5 = GetFileMd5(latestPath);
+            var currentMd5 = GetFileMd5(currentPath);
+
+            if (latestMd5 != currentMd5)
+            {
+                var patcherUpdaterProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = Path.Combine(_localPath, "vision-ro-update-patcher.bat"),
+                        UseShellExecute = true,
+                        Verb = "runas"
+                    }
+                };
+                try
+                {
+                    _updateProgressDelegate("Updating patcher...", 0);
+                    patcherUpdaterProcess.Start();
+                }
+                catch (Win32Exception ex)
+                {
+                    if (ex.NativeErrorCode == 1223)
+                        _updateProgressDelegate("You must accept the User Account Controle (UAC) request...", 0);
+                    else
+                        HandleException(ex);
+                }
+                catch (Exception ex)
+                {
+                    HandleException(ex);
+                }
+            }
+        }
+
+        private string GetFileMd5(string path)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(path))
+                {
+                    return System.Text.Encoding.UTF8.GetString(md5.ComputeHash(stream));
+                }
             }
         }
 

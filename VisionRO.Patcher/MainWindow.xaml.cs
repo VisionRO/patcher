@@ -32,6 +32,7 @@ namespace VisionRO.Patcher
                 await _updateService.InstallAsync();
             else
                 await _updateService.UpdateAsync();
+            await _updateService.UpdatePatcherAsync();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -50,6 +51,7 @@ namespace VisionRO.Patcher
         {
             await _updateService.RepairAsync();
             await _updateService.UpdateAsync();
+            await _updateService.UpdatePatcherAsync();
         }
 
         private void btnExit_Click(object sender, RoutedEventArgs e)
