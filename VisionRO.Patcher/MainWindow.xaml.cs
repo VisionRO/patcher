@@ -29,18 +29,9 @@ namespace VisionRO.Patcher
         private async void InitAsync()
         {
             if (!_updateService.IsInstalled())
-            {
-                if (!_updateService.IsValidRagnarokClient())
-                {
-                    MessageBox.Show("This does not appear to be a valid Ragnarok Online folder. Please put the patcher in a Korean Ragnarok Online folder.");
-                    Close();
-                }
                 await _updateService.InstallAsync();
-            }
             else
-            {
                 await _updateService.UpdateAsync();
-            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

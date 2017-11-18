@@ -10,7 +10,6 @@ namespace VisionRO.Patcher.Services
     public class UpdateService
     {
         private enum StateEnum { Idle, Installing, Updating, Reparing };
-        private readonly string[] requiredKroFiles = new[] { "data.grf", "rdata.grf" };
         private readonly string _localPath;
         private readonly string _remoteUrl;
         private readonly Action<string, int> _updateProgressDelegate;
@@ -23,11 +22,6 @@ namespace VisionRO.Patcher.Services
             _remoteUrl = remoteUrl;
             _updateProgressDelegate = updateProgressDelegate;
             _clientReadyDelegate = clientReadyDelegate;
-        }
-
-        public bool IsValidRagnarokClient()
-        {
-            return requiredKroFiles.All(file => File.Exists(Path.Combine(_localPath, file)));
         }
 
         public bool IsInstalled()
