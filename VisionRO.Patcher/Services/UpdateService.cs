@@ -141,15 +141,16 @@ namespace VisionRO.Patcher.Services
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = Path.Combine(_localPath, "vision-ro-update-patcher.bat"),
-                        UseShellExecute = true,
-                        Verb = "runas"
+                        FileName = "vision-ro-update-patcher.bat",
+                        WorkingDirectory = _localPath,
+                        CreateNoWindow = true
                     }
                 };
                 try
                 {
                     _updateProgressDelegate("Updating patcher...", 0);
                     patcherUpdaterProcess.Start();
+                    patcherUpdaterProcess.WaitForExit();
                 }
                 catch (Win32Exception ex)
                 {
